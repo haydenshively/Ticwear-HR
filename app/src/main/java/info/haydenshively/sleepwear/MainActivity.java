@@ -1,22 +1,23 @@
 package info.haydenshively.sleepwear;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.wearable.view.WearableListView;
-import android.util.Log;
 
 public class MainActivity extends Activity implements WearableListView.ClickListener {
 
-//    private final int[] demoNumbers = new int[] {64, 70, 55, 100};
-    public Filer filer;
-
+    private Filer filer;
     private WearableListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //enableStartOnBoot alarm that triggers sensor reading
+        IntentSwitchboard.enableStartOnBoot(this);//TODO only need to run once in APP's lifetime
+        Schedule.setInterval(15000L);
+        Schedule.update(this);
 
         filer = new Filer(this);
         int[] demoNumbers = filer.readData();
@@ -25,6 +26,11 @@ public class MainActivity extends Activity implements WearableListView.ClickList
         list = (WearableListView)findViewById(R.id.list);
         list.setAdapter(new ListAdapter(this, demoNumbers));
         list.setClickListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

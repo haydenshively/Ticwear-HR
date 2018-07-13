@@ -11,9 +11,9 @@ public class WearableListItemLayout extends LinearLayout implements WearableList
     private ImageView circle;
     private TextView text;
 
-    public WearableListItemLayout(Context context) {this(context, null);}
-    public WearableListItemLayout(Context context, AttributeSet attrs) {this(context, attrs, 0);}
-    public WearableListItemLayout(Context context, AttributeSet attrs, int defStyle) {super(context, attrs, defStyle);}
+    public WearableListItemLayout(final Context context) {this(context, null);}
+    public WearableListItemLayout(final Context context, final AttributeSet attrs) {this(context, attrs, 0);}
+    public WearableListItemLayout(final Context context, final AttributeSet attrs, final int defStyle) {super(context, attrs, defStyle);}
 
     // Get references to the icon and text in the item layout definition
     @Override
@@ -26,8 +26,8 @@ public class WearableListItemLayout extends LinearLayout implements WearableList
     }
 
     @Override
-    public void onCenterPosition(boolean animate) {}
+    public void onCenterPosition(final boolean animate) {}
 
     @Override
-    public void onNonCenterPosition(boolean animate) {}
+    public void onNonCenterPosition(final boolean animate) {}
 }
