@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.support.wearable.view.WearableListView;
 
-class MainActivity extends Activity implements WearableListView.ClickListener {
+public final class MainActivity extends Activity implements WearableListView.ClickListener {
 
     private Filer filer;
     private WearableListView list;
@@ -16,7 +16,7 @@ class MainActivity extends Activity implements WearableListView.ClickListener {
 
         //enable alarm that triggers measurement
         IntentSwitchboard.enableStartOnBoot(this);//TODO only need to run once in APP's lifetime
-//        Schedule.setInterval(30000);
+//        Schedule.setInterval(15000);
         Schedule.update(this);
 
         filer = new Filer(this);
@@ -26,11 +26,6 @@ class MainActivity extends Activity implements WearableListView.ClickListener {
         list = (WearableListView)findViewById(R.id.list);
         list.setAdapter(new ListAdapter(this, demoNumbers));
         list.setClickListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override

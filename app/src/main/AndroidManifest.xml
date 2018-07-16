@@ -10,7 +10,6 @@
 
     <uses-permission android:name="android.permission.BODY_SENSORS" android:required="true"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -29,11 +28,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".MeasurementActivity"
-            android:label="@string/title_activity_measurement">
         </activity>
         <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <service

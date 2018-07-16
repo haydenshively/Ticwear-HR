@@ -1,6 +1,5 @@
 package info.haydenshively.sleepwear;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -30,7 +29,7 @@ final class SensorListener implements SensorEventListener {
         Filer filer = new Filer(context);
 
         final int sensorValue = Math.round(sensorEvent.values[0]);
-        final int[] newData = Filer.combine(filer.readData(), new int[] {sensorValue});
+        final int[] newData = Filer.combine(new int[] {sensorValue}, filer.readData());
         filer.write(newData);
 
         //SHUT IT DOWN AFTER A SINGLE RESULT

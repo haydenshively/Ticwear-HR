@@ -12,7 +12,7 @@ import android.os.BatteryManager;
  * Created by h_shively on 7/13/2018.
  */
 
-final class IntentSwitchboard extends BroadcastReceiver {
+public final class IntentSwitchboard extends BroadcastReceiver {
     public static final String MEASURE_INTENT = "MEASURE";
 
     @Override
