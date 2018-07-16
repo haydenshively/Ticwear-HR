@@ -4,44 +4,49 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
-
-import java.util.Timer;
 
 /**
  * Created by h_shively on 7/13/2018.
  */
 
-public final class MeasurementService extends Service {
+final class MeasurementService extends Service {
+    private static final int sensorRetrievalAttempts = 3;
+    private static final long timeoutMS = 30000;
+    private final Handler handler = new Handler();
+    private final Runnable stop = new Runnable () {@Override public void run() {stopSelf();}};
     private SensorListener sensorListener;
-    private long startTime = SystemClock.elapsedRealtime();
 
-    public MeasurementService() {}
-
-    //FOR ALL
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startID) {
+
 //        PowerManager pm = (PowerManager)getSystemService(POWER_SERVICE);
 //        PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "HR");
 //        wakeLock.acquire();
-        enterForeground();
+//        enterForeground();
+        for (int i = 0; i < sensorRetrievalAttempts; i++) {
+            sensorListener = new SensorListener(this, MeasurementService.class);
+            if (sensorListener.start()) break;
+        }
 
-        sensorListener = new SensorListener(this);
-        sensorListener.start();
-
-        startTime = SystemClock.elapsedRealtime();
-//        wakeLock.release();
+        handler.postDelayed(stop, timeoutMS);
         return START_STICKY;
     }
 
-
-    //FOR ALL
     @Override
     public IBinder onBind(final Intent intent) {return null;}//ignore this since not linked to activity
-    //FOR ALL
+
     @Override
-    public void onCreate() {super.onCreate();}
+    public void onDestroy() {
+        super.onDestroy();
+        sensorListener.unregister();
+//        stopForeground(true);
+//        wakeLock.release();
+    }
+
+
+
 
     private void enterForeground() {
         final Intent onNotiClick = new Intent(getApplicationContext(), MainActivity.class);
@@ -66,12 +71,6 @@ public final class MeasurementService extends Service {
         startForeground(1, notification);
     }
 
-    /**
-     * Stops listening to sensor events, removes notification, and ends service
-     */
-    private void stop() {
-        sensorListener.stop();
-        stopForeground(true);
-        stopSelf();
-    }
+
+
 }

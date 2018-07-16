@@ -1,24 +1,26 @@
 package info.haydenshively.sleepwear;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.annotation.Nullable;
 
 /**
  * Created by h_shively on 7/13/2018.
  */
 
-public class SensorListener implements SensorEventListener {
+final class SensorListener implements SensorEventListener {
     private final Context context;
+    private final Class parent;
     private final SensorManager sensorManager;
     private final Sensor ppg;
 
-    public SensorListener(final Context context) {
+    SensorListener(final Context context, final Class parent) {
         this.context = context;
-
+        this.parent = parent;
         sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         ppg = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
     }
@@ -27,8 +29,12 @@ public class SensorListener implements SensorEventListener {
     public void onSensorChanged(final SensorEvent sensorEvent) {
         Filer filer = new Filer(context);
 
-        float sensorValue = sensorEvent.values[0];
-        Filer.combine(filer.readData(), new int[] {(int)sensorValue});
+        final int sensorValue = Math.round(sensorEvent.values[0]);
+        final int[] newData = Filer.combine(filer.readData(), new int[] {sensorValue});
+        filer.write(newData);
+
+        //SHUT IT DOWN AFTER A SINGLE RESULT
+        stop();
     }
 
     @Override
@@ -40,5 +46,11 @@ public class SensorListener implements SensorEventListener {
             return true;
         }else return false;
     }
-    void stop() {sensorManager.unregisterListener(this);}
+
+    void unregister() {sensorManager.unregisterListener(this);}
+
+    private void stop() {
+        unregister();
+        context.stopService(new Intent(context, parent));
+    }
 }

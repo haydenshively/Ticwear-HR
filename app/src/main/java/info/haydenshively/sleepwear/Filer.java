@@ -15,10 +15,10 @@ import java.util.Arrays;
  * Created by h_shively on 7/3/2018.
  */
 
-public final class Filer {
+final class Filer {
     private final File file;
     public Filer(final Context context) {
-        file = new File(context.getFilesDir(), "data");
+        file = new File(context.getApplicationContext().getFilesDir(), "data");
     }
 
     public void write(final int[] data) {write(Arrays.toString(data));}

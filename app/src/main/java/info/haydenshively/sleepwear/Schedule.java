@@ -13,15 +13,14 @@ import android.os.SystemClock;
 public final class Schedule {
     private Schedule() {}
 
-    public static final String MEASURE_INTENT = "MEASURE";
     private static long interval = AlarmManager.INTERVAL_HALF_HOUR;
 
-    public static void setInterval(final long interval) {Schedule.interval = interval;}
-    public static long getInterval() {return interval;}
+    static void setInterval(final long interval) {Schedule.interval = interval;}
+    static long getInterval() {return interval;}
 
-    public static void update(final Context context) {
+    static void update(final Context context) {
         final Intent alarmIntent = new Intent(context, IntentSwitchboard.class);
-        alarmIntent.setAction(MEASURE_INTENT);
+        alarmIntent.setAction(IntentSwitchboard.MEASURE_INTENT);
         final PendingIntent alarmIntent_compatible = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);

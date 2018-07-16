@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ListAdapter extends WearableListView.Adapter {
+final class ListAdapter extends WearableListView.Adapter {
     private final Context context;
     private final LayoutInflater inflater;
     private int[] dataset;
