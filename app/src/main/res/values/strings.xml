@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Sleepwear</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_measurement">MeasurementActivity</string>
+    <string name="title_activity_main">Sleepwear</string>
+    <string name="title_activity_permission">PermissionActivity</string>
+
+    <string name="permission_warning">Please enable the heart rate permission.</string>
 </resources>

@@ -1,4 +1,4 @@
-package info.haydenshively.sleepwear;
+package info.haydenshively.sleepwear.Model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,29 +15,11 @@ import java.util.Arrays;
  * Created by h_shively on 7/3/2018.
  */
 
-final class Filer {
+abstract class Filer {
     private final File file;
-    public Filer(final Context context) {
-        file = new File(context.getApplicationContext().getFilesDir(), "data");
-    }
+    protected Filer(final Context context, final String filename) {file = new File(context.getApplicationContext().getFilesDir(), filename);}
 
-    public void write(final int[] data) {write(Arrays.toString(data));}
-
-    public int[] readData() {
-        String data_string = read();
-        if (data_string.length() >= 2) {
-            data_string = data_string.substring(1, data_string.length() - 1);
-            final String[] values = data_string.split(", ");
-            int[] data = new int[values.length];
-            for (int i = 0; i < values.length; i++) {
-                if (values[i].length() > 0) data[i] = Integer.parseInt(values[i]);
-            }
-            return data;
-        }else return new int[] {};
-
-    }
-
-    private void write(final String string) {
+    protected void write(final String string) {
         try {
             final FileOutputStream stream = new FileOutputStream(file);
             try {
@@ -52,8 +34,8 @@ final class Filer {
     }
 
     @NonNull
-    private String read() {
-        final int length = (int)file.length();
+    protected String read() {
+        final int length = (int) file.length();
         byte[] bytes = new byte[length];
 
         try {
@@ -69,14 +51,5 @@ final class Filer {
         }
 
         return new String(bytes);
-    }
-
-
-    public static int[] combine(final int[] a, final int[] b) {
-        final int length = a.length + b.length;
-        final int[] result = new int[length];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
     }
 }

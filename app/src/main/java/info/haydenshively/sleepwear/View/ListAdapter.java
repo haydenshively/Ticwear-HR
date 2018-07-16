@@ -1,4 +1,4 @@
-package info.haydenshively.sleepwear;
+package info.haydenshively.sleepwear.View;
 
 import android.content.Context;
 import android.support.wearable.view.WearableListView;
@@ -7,17 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import info.haydenshively.sleepwear.R;
+
 final class ListAdapter extends WearableListView.Adapter {
     private final Context context;
     private final LayoutInflater inflater;
-    private int[] dataset;
+    private String[] items;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public ListAdapter(Context context, int[] dataset) {
+    public ListAdapter(final Context context, final String[] items) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.dataset = dataset;
+        this.items = items;
     }
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public ListAdapter(final Context context, final int[] dataset) {
+        this.context = context;
+        inflater = LayoutInflater.from(context);
+        items = new String[dataset.length];
+        for (int i = 0; i < dataset.length; i++) items[i] = Integer.toString(dataset[i]);
+    }
+
 
     // Create new views for list items
     // (invoked by the WearableListView's layout manager)
@@ -35,7 +44,7 @@ final class ListAdapter extends WearableListView.Adapter {
         // retrieve the text view
         final TextView view = ((ItemViewHolder)holder).textView;
         // replace text contents
-        view.setText(Integer.toString(dataset[position]));
+        view.setText(items[position]);
         // replace list item's metadata
         holder.itemView.setTag(position);
     }
@@ -43,7 +52,7 @@ final class ListAdapter extends WearableListView.Adapter {
     // Return the size of your dataset
     // (invoked by the WearableListView's layout manager)
     @Override
-    public int getItemCount() {return dataset.length;}
+    public int getItemCount() {return items.length;}
 
     // Provide a reference to the type of views you're using
     public static class ItemViewHolder extends WearableListView.ViewHolder {
@@ -52,7 +61,7 @@ final class ListAdapter extends WearableListView.Adapter {
         public ItemViewHolder(final View itemView) {
             super(itemView);
             // find the text view within the custom item's layout
-            textView = (TextView)itemView.findViewById(R.id.name);
+            textView = itemView.findViewById(R.id.name);
         }
     }
 }

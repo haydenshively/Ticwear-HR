@@ -1,4 +1,4 @@
-package info.haydenshively.sleepwear;
+package info.haydenshively.sleepwear.Controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import info.haydenshively.sleepwear.Model.F_Measurements;
 
 /**
  * Created by h_shively on 7/13/2018.
@@ -22,14 +24,20 @@ final class SensorListener implements SensorEventListener {
         this.parent = parent;
         sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         ppg = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+
+        F_Measurements filer = new F_Measurements(context);
+        int[] oldData = filer.mread();
+        if (oldData.length > 0) oldData[0]++;
+        else oldData = new int[] {1};
+        filer.write(oldData);
     }
 
     @Override
     public void onSensorChanged(final SensorEvent sensorEvent) {
-        Filer filer = new Filer(context);
+        F_Measurements filer = new F_Measurements(context);
 
         final int sensorValue = Math.round(sensorEvent.values[0]);
-        final int[] newData = Filer.combine(new int[] {sensorValue}, filer.readData());
+        final int[] newData = F_Measurements.combine(filer.mread(), new int[] {sensorValue});
         filer.write(newData);
 
         //SHUT IT DOWN AFTER A SINGLE RESULT

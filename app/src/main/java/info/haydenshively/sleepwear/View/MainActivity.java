@@ -1,12 +1,16 @@
-package info.haydenshively.sleepwear;
+package info.haydenshively.sleepwear.View;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.wearable.view.WearableListView;
 
+import info.haydenshively.sleepwear.Model.F_Measurements;
+import info.haydenshively.sleepwear.R;
+import info.haydenshively.sleepwear.Controller.Schedule;
+
 public final class MainActivity extends Activity implements WearableListView.ClickListener {
 
-    private Filer filer;
     private WearableListView list;
 
     @Override
@@ -14,17 +18,17 @@ public final class MainActivity extends Activity implements WearableListView.Cli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //enable alarm that triggers measurement
-        IntentSwitchboard.enableStartOnBoot(this);//TODO only need to run once in APP's lifetime
-//        Schedule.setInterval(15000);
-        Schedule.update(this);
+        if (PermissionActivity.grantedAll(this)) {
+            Schedule.enableStartOnBoot(this);
+            Schedule.update(this);
+        }else startActivity(new Intent(this, PermissionActivity.class));
 
-        filer = new Filer(this);
-        int[] demoNumbers = filer.readData();
-        if (demoNumbers.length == 0) demoNumbers = new int[] {0};
 
-        list = (WearableListView)findViewById(R.id.list);
-        list.setAdapter(new ListAdapter(this, demoNumbers));
+        final int[] measurements = (new F_Measurements(this)).mread();
+
+        list = findViewById(R.id.list);
+        if (measurements.length > 0) list.setAdapter(new ListAdapter(this, measurements));
+        else list.setAdapter(new ListAdapter(this, new String[] {"No data yet!"}));
         list.setClickListener(this);
     }
 
@@ -40,5 +44,4 @@ public final class MainActivity extends Activity implements WearableListView.Cli
 
     @Override
     public void onTopEmptyRegionClick() {}
-
 }

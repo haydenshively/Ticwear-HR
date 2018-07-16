@@ -1,4 +1,4 @@
-package info.haydenshively.sleepwear;
+package info.haydenshively.sleepwear.View;
 
 import android.content.Context;
 import android.support.wearable.view.WearableListView;
@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import info.haydenshively.sleepwear.R;
 
 public class WearableListItemLayout extends LinearLayout implements WearableListView.OnCenterProximityListener {
     private ImageView circle;
