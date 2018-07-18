@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 import info.haydenshively.sleepwear.R;
@@ -19,10 +20,12 @@ public final class MeasurementService extends Service {
     private static final long timeoutMS = 60000;
     private final Handler handler = new Handler();
     private final Runnable stop = new Runnable () {@Override public void run() {stopSelf();}};
+    private PowerManager.WakeLock wakeLock;
     private SensorListener sensorListener;
 
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startID) {
+        keepAlive(true);
         startForeground(0, createNotification().build());
 
         for (int i = 0; i < sensorRetrievalAttempts; i++) {
@@ -40,8 +43,9 @@ public final class MeasurementService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopForeground(true);
         sensorListener.unregister();
+        stopForeground(true);
+        keepAlive(false);
     }
 
     private NotificationCompat.Builder createNotification() {
@@ -55,5 +59,14 @@ public final class MeasurementService extends Service {
                 .setContentText("Try to hold still")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent);
+    }
+
+    private void keepAlive(final boolean on) {
+        if (wakeLock == null) {
+            PowerManager powerManager = (PowerManager)getSystemService(POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Measuring");
+        }
+        if (on) wakeLock.acquire();
+        else wakeLock.release();
     }
 }

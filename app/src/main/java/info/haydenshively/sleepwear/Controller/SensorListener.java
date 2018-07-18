@@ -24,12 +24,6 @@ final class SensorListener implements SensorEventListener {
         this.parent = parent;
         sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         ppg = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-
-        F_Measurements filer = new F_Measurements(context);
-        int[] oldData = filer.mread();
-        if (oldData.length > 0) oldData[0]++;
-        else oldData = new int[] {1};
-        filer.write(oldData);
     }
 
     @Override
@@ -50,6 +44,7 @@ final class SensorListener implements SensorEventListener {
     boolean start() {
         if (ppg != null) {
             sensorManager.registerListener(this, ppg, SensorManager.SENSOR_DELAY_NORMAL);
+//            incrementAttempts();
             return true;
         }else return false;
     }
@@ -59,5 +54,13 @@ final class SensorListener implements SensorEventListener {
     private void stop() {
         unregister();
         context.stopService(new Intent(context, parent));
+    }
+
+    private void incrementAttempts() {
+        F_Measurements filer = new F_Measurements(context);
+        int[] oldData = filer.mread();
+        if (oldData.length > 0) oldData[0]++;
+        else oldData = new int[] {1};
+        filer.write(oldData);
     }
 }

@@ -15,10 +15,10 @@ import android.os.SystemClock;
 public final class Schedule {
     private Schedule() {}
 
-    private static long interval = AlarmManager.INTERVAL_HALF_HOUR;
+    private static long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 
-    static void setInterval(final long interval) {Schedule.interval = interval;}
-    static long getInterval() {return interval;}
+    public static void setInterval(final long interval) {Schedule.interval = interval;}
+    public static long getInterval() {return interval;}
 
     public static void update(final Context context) {
         final Intent alarmIntent = new Intent(context, IntentSwitchboard.class);
@@ -26,7 +26,16 @@ public final class Schedule {
         final PendingIntent alarmIntent_compatible = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, interval, alarmIntent_compatible);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.uptimeMillis() + interval/2, interval, alarmIntent_compatible);
+    }
+
+    public static void cancel(final Context context) {
+        final Intent alarmIntent = new Intent(context, IntentSwitchboard.class);
+        alarmIntent.setAction(IntentSwitchboard.MEASURE_INTENT);
+        final PendingIntent alarmIntent_compatible = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        final AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(alarmIntent_compatible);
     }
 
     public static void enableStartOnBoot(final Context context) {

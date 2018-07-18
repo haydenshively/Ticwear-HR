@@ -2,6 +2,7 @@
     <string name="app_name">Sleepwear</string>
     <string name="title_activity_main">Sleepwear</string>
     <string name="title_activity_permission">PermissionActivity</string>
+    <string name="title_activity_data">DataActivity</string>
 
     <string name="permission_warning">Please enable the heart rate permission.</string>
 </resources>
