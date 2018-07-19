@@ -14,6 +14,7 @@ import info.haydenshively.sleepwear.Model.F_Measurements;
  */
 
 final class SensorListener implements SensorEventListener {
+    private static final int histLength = 24;
     private final Context context;
     private final Class parent;
     private final SensorManager sensorManager;
@@ -31,8 +32,16 @@ final class SensorListener implements SensorEventListener {
         F_Measurements filer = new F_Measurements(context);
 
         final int sensorValue = Math.round(sensorEvent.values[0]);
-        final int[] newData = F_Measurements.combine(filer.mread(), new int[] {sensorValue});
-        filer.write(newData);
+        final int[] storedData = filer.mread();
+        if (storedData.length > 0) {
+            final int[] newData = F_Measurements.combine(new int[] {sensorValue}, storedData);
+            if (newData.length > histLength) {
+                int[] toBeStored = new int[histLength];
+                for (int i = 0; i < histLength; i++) toBeStored[i] = newData[i];
+                filer.write(toBeStored);
+            }else filer.write(newData);
+        }else filer.write(new int[] {sensorValue});
+
 
         //SHUT IT DOWN AFTER A SINGLE RESULT
         stop();

@@ -54,10 +54,11 @@ public final class MeasurementService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         return new NotificationCompat.Builder(this, "ID")
-                .setSmallIcon(R.drawable.go_to_phone_00172)
+                .setSmallIcon(R.mipmap.circle)
                 .setContentTitle("Measuring HR")
                 .setContentText("Try to hold still")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true)
                 .setContentIntent(pendingIntent);
     }
 
@@ -66,7 +67,7 @@ public final class MeasurementService extends Service {
             PowerManager powerManager = (PowerManager)getSystemService(POWER_SERVICE);
             wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Measuring");
         }
-        if (on) wakeLock.acquire();
+        if (on) wakeLock.acquire(timeoutMS);
         else wakeLock.release();
     }
 }

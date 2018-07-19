@@ -3,13 +3,12 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.3"
-
     defaultConfig {
         applicationId "info.haydenshively.sleepwear"
         minSdkVersion 20
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName '2.0'
     }
     buildTypes {
         release {
@@ -17,15 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     lintOptions {
         checkReleaseBuilds false
+    }
+    productFlavors {
     }
 }
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "com.ticwear:mobvoi-api:1.0.8"
+    compile 'com.ticwear:mobvoi-api:1.0.8'
     compile 'com.google.android.support:wearable:1.1.0'
     compile 'com.alibaba:fastjson:1.2.7'
 }
